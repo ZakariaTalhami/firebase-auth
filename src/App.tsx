@@ -1,24 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import LoginForm from "./components/LoginForm";
+import SignOutForm from "./components/SignOutForm";
+import UserList from "./components/UserLIst";
+import { getCurrentUser } from "./firebase";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const user = getCurrentUser();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!user && <LoginForm onStatusChange={() => setIsLoggedIn(true)} />}
+      {user && <h1>Current User ID: {user.uid}</h1>}
+      {user && <SignOutForm onStatusChange={() => setIsLoggedIn(false)} />}
+      {user && <UserList />}
     </div>
   );
 }
